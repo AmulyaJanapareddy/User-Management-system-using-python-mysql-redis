@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management Dashboard</title>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f9;
+  color: #333;
+}
+
+.header {
+  background: linear-gradient(135deg, #1f4037 0%, #145c4b 100%);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+
+.header h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 20px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 350px;
+  max-width: 500px;
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1f4037;
+  font-size: 24px;
+  border-bottom: 2px solid #1f4037;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 0px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1f4037;
+  box-shadow: 0 0 5px rgba(31, 64, 55, 0.2);
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #1f4037;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+  flex: 1;
+}
+
+button:hover {
+  background: #145c4b;
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 12px rgba(31, 64, 55, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+#status {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  display: none;
+}
+
+#status.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  display: block;
+}
+
+#status.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  display: block;
+}
+
+.infoBox {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-left: 4px solid #1f4037;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1f4037;
+}
+
+.infoBox span {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.infoBox span:last-child {
+  margin-bottom: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+th {
+  background: #1f4037;
+  color: white;
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid #ddd;
+}
+
+td {
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+tbody tr:hover {
+  background: #e8f0ff;
+}
+
+.no-data {
+  text-align: center;
+  padding: 30px;
+  color: #999;
+  font-style: italic;
+}
+
+.fetch-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.fetch-buttons button {
+  flex: 1;
+}
+
+@media (max-width: 1024px) {
+  .main {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    max-width: 100%;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .card h2 {
+    font-size: 20px;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <h1>User Management System</h1>
+  <p>Add users and compare MySQL vs Redis performance</p>
+</div>
+
+<div class="main">
+
+  <!-- ADD USER CARD -->
+  <div class="card">
+    <h2>Add New User</h2>
+
+    <div class="form-group">
+      <label for="id">User ID</label>
+      <input id="id" type="number" placeholder="Enter user ID" required>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" type="text" placeholder="Enter user name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="mobile">Mobile Number</label>
+      <input id="mobile" type="tel" placeholder="Enter mobile number" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email ID</label>
+      <input id="email" type="email" placeholder="Enter email address" required>
+    </div>
+
+    <button onclick="addUser()">Add User</button>
+
+    <div id="status"></div>
+  </div>
+
+  <!-- FETCH USERS CARD -->
+  <div class="card">
+    <h2>Fetch Users</h2>
+
+    <div class="fetch-buttons">
+      <button onclick="fetchMySQL()">Fetch From MySQL</button>
+      <button onclick="fetchRedis()">Fetch From Redis</button>
+    </div>
+
+    <div class="infoBox" id="info" style="display:none;"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody id="tableData">
+        <tr>
+          <td colspan="4" class="no-data">No data to display. Click a fetch button above.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+
+
+async function addUser(){
+
+let id=document.getElementById("id").value
+let name=document.getElementById("name").value
+let mobile=document.getElementById("mobile").value
+let email=document.getElementById("email").value
+
+if(!id || !name || !mobile || !email) {
+  displayStatus("Please fill in all fields", "error")
+  return
+}
+
+let res=await fetch("http://127.0.0.1:8000/createuser",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+id:parseInt(id),
+name:name,
+mobile:mobile,
+email:email
+})
+
+})
+
+let data=await res.json()
+
+if(res.ok) {
+  displayStatus(data.message || "User Created Successfully", "success")
+  document.getElementById("id").value=""
+  document.getElementById("name").value=""
+  document.getElementById("mobile").value=""
+  document.getElementById("email").value=""
+  document.getElementById("id").focus()
+} else {
+  displayStatus(data.detail || "Error adding user", "error")
+}
+
+}
+
+function displayStatus(message, type) {
+  let statusDiv = document.getElementById("status")
+  statusDiv.innerText = message
+  statusDiv.className = type
+  
+  if(type === "success") {
+    setTimeout(() => {
+      statusDiv.className = ""
+    }, 3000)
+  }
+}
+
+function showTable(users){
+
+let output=""
+
+if(!users || users.length === 0) {
+  output = `<tr><td colspan="4" class="no-data">No users found</td></tr>`
+  document.getElementById("tableData").innerHTML=output
+  return
+}
+
+users.forEach(u=>{
+
+output+=`
+
+<tr>
+
+<td>${u.id}</td>
+<td>${u.name}</td>
+<td>${u.mobile}</td>
+<td>${u.email || '-'}</td>
+
+</tr>
+
+`
+
+})
+
+document.getElementById("tableData").innerHTML=output
+
+}
+
+async function fetchMySQL(){
+
+try {
+  let res=await fetch("http://127.0.0.1:8000/users/mysql")
+  let data=await res.json()
+  
+  if(res.ok) {
+    showTable(data.users)
+    displayInfo(data.source, data.fetch_time)
+  } else {
+    displayStatus(data.detail || "Error fetching from MySQL", "error")
+  }
+} catch(e) {
+  displayStatus("Error: " + e.message, "error")
+}
+
+}
+
+async function fetchRedis(){
+
+try {
+  let res=await fetch("http://127.0.0.1:8000/users/redis")
+  let data=await res.json()
+  
+  if(res.ok) {
+    showTable(data.users)
+    displayInfo(data.source, data.fetch_time)
+  } else {
+    displayStatus(data.detail || "Error fetching from Redis", "error")
+  }
+} catch(e) {
+  displayStatus("Error: " + e.message, "error")
+}
+
+}
+
+function displayInfo(source, fetchTime) {
+  let infoDiv = document.getElementById("info")
+  infoDiv.innerHTML = `<span><strong>Source:</strong> ${source}</span><span><strong>Fetch Time:</strong> ${fetchTime}</span>`
+  infoDiv.style.display = "block"
+}
+
+</script>
+
+</body>
+
+</html>

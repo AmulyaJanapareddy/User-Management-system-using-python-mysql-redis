@@ -1,0 +1,7 @@
+MYSQL_HOST = "localhost"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "root"
+MYSQL_DATABASE = "userdb"
+
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
